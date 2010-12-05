@@ -12,5 +12,7 @@ class Message( db.Model ):
     text = db.StringProperty(required=False)
     imgpath = db.StringProperty(required=False)
     timestamp = db.DateTimeProperty(required=False)
-    loc = db.GeoPtProperty(required=False)
+    #loc = db.GeoPtProperty(required=False)
+    lat = db.FloatProperty(required=False)
+    lon = db.FloatProperty(required=False)
     category = db.CategoryProperty(required=False)

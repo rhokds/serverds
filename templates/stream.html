@@ -14,7 +14,7 @@
            socket  = channel.open();
            socket.onmessage = function(m){
 	        p = JSON.parse(m.data);
-	        elemdata = "<div>" + p.handler + " : " + p.text  + "</div>"
+	        elemdata = "<div>" + p.handler + " [ " + p.timestamp +" ] : " + p.text  + " loc = (" + p.lat + "," + p.lon + ") </div>"
 	        $("#showme").append(elemdata)
            };
     </script>

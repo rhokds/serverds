@@ -26,7 +26,7 @@ class MainPage(webapp.RequestHandler):
     def get(self):
         token = channel.create_channel("rhokds")
         template_values = {"token":token}
-        path = os.path.join(os.path.dirname(__file__), "templates/stream.html")
+        path = os.path.join(os.path.dirname(__file__), "templates/mapstream.html")
         self.response.out.write(template.render(path, template_values))
         
 class FeedHandler(webapp.RequestHandler):
@@ -41,15 +41,14 @@ class FeedHandler(webapp.RequestHandler):
             r = { "handler": q.handler }
             r["text"] = q.text
             r["timestamp"] = calendar.timegm(q.timestamp.timetuple())
-            if "imgpath" in k:
+            if hasattr(q, "imgpath"):
                 r["imgpath"] = q.imgpath
-            if "timestamp" in k:
-                r["timestamp"] = q.timestamp
-            if "lat" in k:
+            if hasattr(q, "timestamp"):
+                r["timestamp"] = calendar.timegm(q.timestamp.timetuple())
+            if hasattr(q, "lat") and hasattr(q, "lon"):
                 r["lat"] = q.lat
-            if "lon" in k:
-                r["lon"] = q.lon
-            if "category" in k:
+                r["lon"] = q.qlon
+            if hasattr(q, "category"):
                 r["category"] = q.category
             retlist.append( r )
 
@@ -85,8 +84,8 @@ class PostHandler(webapp.RequestHandler):
                 jsu["timestamp"] = calendar.timegm(datetime.datetime.utcnow().timetuple())
 
             if ("lat" in args) and ("lon" in args):
-                msg.loc = db.GeoPt( float( self.request.get("lat")),
-                                    float( self.request.get("lon")))
+                msg.lat = float( self.request.get("lat"))
+                msg.lon = float( self.request.get("lon"))
                 jsu["lat"] = float( self.request.get("lat") )
                 jsu["lon"] = float( self.request.get("lon") )
             if "category" in args:
