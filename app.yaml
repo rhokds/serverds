@@ -1,0 +1,8 @@
+runtime: python
+api_version: 1
+application: rhokds
+version: 1
+
+handlers:
+- url: /.*
+  script: main.py
